@@ -1,0 +1,80 @@
+name: twisterd
+version: '0.9.40-a3a926e'
+summary: Twister - peer-to-peer microblogging software
+description: |
+  Put to your /home/᚜user᚛/snap/twisterd/common/.twister/twister.conf :
+
+  rpcuser=᚜login᚛  
+  rpcpassword=᚜secretpassword᚛  
+  rpcallowip=127.0.0.1
+
+  Then start twisterd and open http ://᚜login᚛:᚜secretpassword᚛@localhost:28332
+source-code: https://github.com/iomezk/snap-twisterd
+license: MIT
+base: core22
+confinement: strict
+grade: devel
+icon: icon.svg
+
+apps:
+  twisterd:
+    command: bin/twisterd
+    plugs:
+    - network-bind
+
+environment:
+  HOME: $SNAP_USER_COMMON
+  PATH: $SNAP/bin:$PATH
+  LD_LIBRARY_PATH: $SNAP/lib
+
+layout:
+  /usr/share/twister/html:
+    symlink: $SNAP/html
+
+parts:
+  twisterd:
+    source: https://github.com/miguelfreitas/twister-core.git
+    source-commit: a3a926e3d4b46c52e49f7f93298ff6b6c6b782f8
+    source-type: git
+    source-depth: 1
+    plugin: autotools
+    build-packages:
+    - make
+    - g++
+    - libboost-dev
+    - libdb++-dev
+    - libssl-dev
+    stage-packages:
+    - libboost-chrono1.74.0
+    - libboost-filesystem1.74.0
+    - libboost-locale1.74.0
+    - libboost-program-options1.74.0
+    - libboost-regex1.74.0
+    - libboost-thread1.74.0
+    - libdb5.3++
+    - libicu70
+    build-environment:
+    - CFLAGS: -O2
+    - CXXFLAGS: -O2
+    autotools-configure-parameters:
+    - --prefix=/
+    - --disable-debug
+    override-pull: |
+      craftctl default
+      mv autotool.sh autogen.sh
+    organize:
+      '**/*.so*': lib/
+    prime:
+    - bin/twisterd
+    - lib/
+    - -lib/libicuio*
+    - -lib/libicutest*
+    - -lib/libicutu*
+  html:
+    source: https://github.com/miguelfreitas/twister-html.git
+    source-commit: 508c05859ec43ff6c3ca0e955281136813b4f90f
+    source-type: git
+    source-depth: 1
+    plugin: dump
+    organize:
+      '*': html/
