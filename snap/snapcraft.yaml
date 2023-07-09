@@ -1,5 +1,5 @@
 name: twisterd
-version: '0.9.40-a3a926e'
+version: '0.9.40-a3a926e-1.5-8f71cc1'
 summary: Twister - peer-to-peer microblogging software
 description: |
   Put to your /home/᚜user᚛/snap/twisterd/common/.twister/twister.conf :
@@ -9,7 +9,7 @@ description: |
   rpcallowip=127.0.0.1
 
   Then start twisterd and open http ://᚜login᚛:᚜secretpassword᚛@localhost:28332
-source-code: https://github.com/iomezk/snap-twisterd
+source-code: https://github.com/iomezk/snap-twisterd/tree/core22-ta
 license: MIT
 base: core22
 confinement: strict
@@ -71,10 +71,12 @@ parts:
     - -lib/libicutest*
     - -lib/libicutu*
   html:
-    source: https://github.com/miguelfreitas/twister-html.git
-    source-commit: 508c05859ec43ff6c3ca0e955281136813b4f90f
+    source: https://github.com/twisterarmy/twister-html.git
+    source-commit: 8f71cc169a34d48bceffbb7d4f7cdaaa9e75f3b2
     source-type: git
     source-depth: 1
     plugin: dump
     organize:
       '*': html/
+    prime:
+    - -**/sass/
